@@ -1,0 +1,14 @@
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - tawachai</title>
+      {% else %}
+      <title>Welcome to tawachai</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>tawachai: <a href="/index">Home</a></div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
