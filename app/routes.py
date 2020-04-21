@@ -73,21 +73,38 @@ def index():
         db.session.commit()
         flash('Added a new project.')
         return redirect(url_for('index'))
-    projects = Project.query.filter_by(created_by = current_user).order_by(Project.timestamp.desc()).all()
-    return render_template('index.html', title='Home', form=form, projects=projects)
+    page =request.args.get('page', 1, type=int)
+    projects = Project.query.filter_by(created_by = current_user).order_by(Project.timestamp.desc()).paginate(
+        page, app.config['PROJECTS_PER_PAGE'], False)
+    next_url = url_for('index', page=projects.next_num) \
+        if projects.has_next else None
+    prev_url = url_for('index', page=projects.prev_num) \
+        if projects.has_prev else None
+    return render_template('index.html', title='Home', form=form, projects=projects.items, next_url=next_url, prev_url=prev_url)
 
 @app.route('/explore')
 @login_required
 def explore():
-    projects = Project.query.order_by(Project.timestamp.desc()).all()
-    return render_template('index.html', title = 'Explore', projects=projects)
+    page = request.args.get('page', 1, type=int)
+    projects = Project.query.order_by(Project.timestamp.desc()).paginate(page, app.config['PROJECTS_PER_PAGE'], False)
+
+    next_url = url_for('explore', page=projects.next_num) \
+        if projects.has_next else None
+    prev_url = url_for('explore', page=projects.prev_num) \
+        if projects.has_prev else None
+    return render_template('index.html', title = 'Explore', projects=projects.items, next_url=next_url, prev_url=prev_url)
 
 @app.route('/user/<username>')
 @login_required
 def user(username):
     user = User.query.filter_by(username = username).first_or_404()
-    projects = Project.query.filter_by(created_by = user).order_by(Project.timestamp.desc()).all()
-    return render_template('user.html', user=user, projects=projects)
+    page = request.args.get('page', 1, type=int)
+    projects = Project.query.filter_by(created_by = user).order_by(Project.timestamp.desc()).paginate(page, app.config['PROJECTS_PER_PAGE'], False)
+    next_url = url_for('user', username=user.username, page=projects.next_num) \
+        if projects.has_next else None
+    prev_url = url_for('user', username=user.username, page=projects.prev_num) \
+        if projects.has_prev else None
+    return render_template('user.html', user=user, projects=projects.items, next_url=next_url, prev_url=prev_url)
 
 
 
