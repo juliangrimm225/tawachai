@@ -70,3 +70,17 @@ Traceback (most recent call last):
     sender=app.config['ADMINS'][0],
 NameError: name 'app' is not defined
 2020-04-21 15:00:36,684 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:45]
+2020-04-21 15:11:15,670 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:11:21,367 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:44:10,599 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:50:34,722 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:55:47,013 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:59:06,800 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:04:38,595 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:06:50,879 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:07:32,664 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:08:15,594 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:08:37,063 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:13:33,163 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:49]
+2020-04-21 16:14:54,849 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:49]
+2020-04-21 16:18:37,298 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:49]
