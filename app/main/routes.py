@@ -1,7 +1,6 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, current_app
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_required
-from app import app
 from sqlalchemy import func
 from datetime import datetime
 from app.models import User, Project
@@ -29,7 +28,7 @@ def index():
         return redirect(url_for('main.index'))
     page =request.args.get('page', 1, type=int)
     projects = Project.query.filter_by(created_by = current_user).order_by(Project.timestamp.desc()).paginate(
-        page, app.config['PROJECTS_PER_PAGE'], False)
+        page, current_app.config['PROJECTS_PER_PAGE'], False)
     next_url = url_for('main.index', page=projects.next_num) \
         if projects.has_next else None
     prev_url = url_for('main.index', page=projects.prev_num) \
@@ -40,7 +39,7 @@ def index():
 @login_required
 def explore():
     page = request.args.get('page', 1, type=int)
-    projects = Project.query.order_by(Project.timestamp.desc()).paginate(page, app.config['PROJECTS_PER_PAGE'], False)
+    projects = Project.query.order_by(Project.timestamp.desc()).paginate(page, current_app.config['PROJECTS_PER_PAGE'], False)
 
     next_url = url_for('main.explore', page=projects.next_num) \
         if projects.has_next else None
@@ -53,7 +52,7 @@ def explore():
 def user(username):
     user = User.query.filter_by(username = username).first_or_404()
     page = request.args.get('page', 1, type=int)
-    projects = Project.query.filter_by(created_by = user).order_by(Project.timestamp.desc()).paginate(page, app.config['PROJECTS_PER_PAGE'], False)
+    projects = Project.query.filter_by(created_by = user).order_by(Project.timestamp.desc()).paginate(page, current_app.config['PROJECTS_PER_PAGE'], False)
     next_url = url_for('main.user', username=user.username, page=projects.next_num) \
         if projects.has_next else None
     prev_url = url_for('main.user', username=user.username, page=projects.prev_num) \
