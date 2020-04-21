@@ -8,7 +8,7 @@
 				<b>{{ project.name }}</b></br>
 				Here some data about the project....</br>
 				<i>Created by 
-                	<a href="{{ url_for('user', username=project.created_by.username) }}">
+                	<a href="{{ url_for('main.user', username=project.created_by.username) }}">
                     	{{ project.created_by.first_name }} {{ project.created_by.last_name }}
                 	</a> {{ moment(project.timestamp).fromNow() }}.
 				</i>
