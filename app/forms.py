@@ -39,7 +39,7 @@ class EditProfileForm(FlaskForm):
         self.original_username = original_username
 
     def validate_username(self, username):
-        if username.data.upper() != self.original_username.upper()
+        if username.data.upper() != self.original_username.upper():
             user = User.query.filter(
                 func.upper(User.username)==func.upper(self.username.data)).first()
             if user is not None:

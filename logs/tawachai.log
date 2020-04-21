@@ -1,1 +1,23 @@
 2020-04-21 11:38:36,526 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 11:56:36,411 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 11:56:42,662 ERROR: Exception on /edit_profile [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 100, in edit_profile
+    form = EditProfileForm(curret_user.username)
+NameError: name 'curret_user' is not defined
+2020-04-21 11:57:56,205 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 11:58:47,369 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]

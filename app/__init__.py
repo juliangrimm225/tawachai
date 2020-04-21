@@ -31,7 +31,7 @@ if not app.debug:
             credentials=auth, secure=secure)
         mail_handler.setLevel(logging.ERROR)
         app.logger.addHandler(mail_handler)
-    if not os.path.exists('log'):
+    if not os.path.exists('logs'):
         os.mkdir('logs')
     file_handler = RotatingFileHandler('logs/tawachai.log', maxBytes=10240, backupCount=10)
     file_handler.setFormatter(logging.Formatter(
