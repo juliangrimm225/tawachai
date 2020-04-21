@@ -44,3 +44,7 @@ class EditProfileForm(FlaskForm):
                 func.upper(User.username)==func.upper(self.username.data)).first()
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+class ProjectForm():
+    name = StringField('Name of a new project', validators=[DataRequired()]
+    submit = SubmitField('Submit')
