@@ -1,5 +1,16 @@
-	<table>
-		<tr valign="top">
-			<td><b>{{ project.name }}</b><br>Created by {{ project.created_by.first_name }}</td>
-		</tr>
-	</table>
+<table>
+	<tr>
+		<th rowspan="3"><img src="{{ project.avatar(64) }}"></th>
+		<td><b>{{ project.name }}</b></td>
+	</tr>
+	<tr>
+		<td>Some important facts about the projects</td>
+	</tr>
+	<tr>
+		<td>Project was created by 
+			<a href="{{ url_for('user', username=project.created_by.username) }}">
+			{{ project.created_by.first_name }}<img src="{{ project.created_by.avatar(12) }}">
+			</a>
+		</td>
+	</tr>
+</table>

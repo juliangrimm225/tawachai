@@ -1,0 +1,140 @@
+2020-04-21 11:38:36,526 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 11:56:36,411 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 11:56:42,662 ERROR: Exception on /edit_profile [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 100, in edit_profile
+    form = EditProfileForm(curret_user.username)
+NameError: name 'curret_user' is not defined
+2020-04-21 11:57:56,205 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 11:58:47,369 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 12:48:01,481 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 12:48:04,425 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 70, in index
+    if form.validate_on_submit():
+AttributeError: 'ProjectForm' object has no attribute 'validate_on_submit'
+2020-04-21 12:49:54,548 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 12:49:57,161 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 70, in index
+    if form.validate_on_submit():
+AttributeError: 'ProjectForm' object has no attribute 'validate_on_submit'
+2020-04-21 12:53:01,838 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 12:53:04,131 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 86, in index
+    return render_template('index.html', title='Home', projects=projects)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 137, in render_template
+    return _render(
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 120, in _render
+    rv = template.render(context)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/home/julian/tawachai/app/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/julian/tawachai/app/templates/base.html", line 30, in top-level template code
+    {% block content %}{% endblock %}
+  File "/home/julian/tawachai/app/templates/index.html", line 6, in block "content"
+    {{ form.hidden_tag() }}
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 471, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'form' is undefined
+2020-04-21 12:53:45,156 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 12:53:48,685 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 86, in index
+    return render_template('index.html', title='Home', projects=projects)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 137, in render_template
+    return _render(
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 120, in _render
+    rv = template.render(context)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/home/julian/tawachai/app/templates/index.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/julian/tawachai/app/templates/base.html", line 30, in top-level template code
+    {% block content %}{% endblock %}
+  File "/home/julian/tawachai/app/templates/index.html", line 6, in block "content"
+    {{ form.hidden_tag() }}
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 471, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'form' is undefined
+2020-04-21 12:54:48,390 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]

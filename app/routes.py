@@ -4,6 +4,14 @@ from app import app
 from sqlalchemy import func
 from datetime import datetime
 from app.models import User
+from app.forms import LoginForm
+from flask_login import current_user, login_user, logout_user, login_required
+from app.models import User
+from app import db
+from app.forms import EditProfileForm
+from app.forms import RegistrationForm
+from app.forms import ProjectForm
+from app.models import Project
 
 @app.before_request
 def before_request():
@@ -12,11 +20,6 @@ def before_request():
         db.session.commit()
 
 ####Authentication Routes####
-from app.forms import LoginForm
-from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
-from app import db
-from app.forms import RegistrationForm
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -59,40 +62,34 @@ def register():
 
 
 ####Main Routes####
-@app.route('/')
-@app.route('/index')
+@app.route('/',methods=['GET','POST'])
+@app.route('/index', methods=['GET','POST'])
 @login_required
 def index():
-    projects = [
-        {
-            'name': 'Project 1',
-            'created_by': {'first_name': 'Julian'}
-        },
-        {
-            'name': 'Project 2',
-            'created_by': {'first_name': 'Susan'}
-        }
-    ]
-    return render_template('index.html', title='Home', projects=projects)
+    form = ProjectForm()
+    if form.validate_on_submit():
+        project = Project(name=form.name.data, created_by=current_user)
+        db.session.add(project)
+        db.session.commit()
+        flash('Added a new project.')
+        return redirect(url_for('index'))
+    projects = Project.query.filter_by(created_by = current_user).order_by(Project.timestamp.desc()).all()
+    return render_template('index.html', title='Home', form=form, projects=projects)
+
+@app.route('/explore')
+@login_required
+def explore():
+    projects = Project.query.order_by(Project.timestamp.desc()).all()
+    return render_template('index.html', title = 'Explore', projects=projects)
 
 @app.route('/user/<username>')
 @login_required
 def user(username):
     user = User.query.filter_by(username = username).first_or_404()
-    projects = [
-        {
-            'name': 'Project 1 the user is working on',
-            'created_by': {'first_name': 'Julian'}
-        },
-        {
-            'name': 'Project 2 the user is working on',
-            'created_by': {'first_name': 'Susan'}
-        }
-    ]
+    projects = Project.query.filter_by(created_by = user).order_by(Project.timestamp.desc()).all()
     return render_template('user.html', user=user, projects=projects)
 
 
-from app.forms import EditProfileForm
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required

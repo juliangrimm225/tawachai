@@ -1,6 +1,9 @@
-2020-04-21 11:38:36,526 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 11:56:36,411 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 11:56:42,662 ERROR: Exception on /edit_profile [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2020-04-21 13:11:26,018 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 13:20:46,553 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 13:21:41,227 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 13:22:08,294 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 13:25:08,719 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 13:25:20,411 ERROR: Exception on /user/john [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -16,8 +19,88 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 100, in edit_profile
-    form = EditProfileForm(curret_user.username)
-NameError: name 'curret_user' is not defined
-2020-04-21 11:57:56,205 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 11:58:47,369 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+  File "/home/julian/tawachai/app/routes.py", line 99, in user
+    return render_template('user.html', user=user, projects=projects)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 137, in render_template
+    return _render(
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 120, in _render
+    rv = template.render(context)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
+    self.environment.handle_exception()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
+    reraise(*rewrite_traceback_stack(source=source))
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
+    raise value.with_traceback(tb)
+  File "/home/julian/tawachai/app/templates/user.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/home/julian/tawachai/app/templates/base.html", line 31, in top-level template code
+    {% block content %}{% endblock %}
+  File "/home/julian/tawachai/app/templates/user.html", line 19, in block "content"
+    {% include '_project.html' %}
+  File "/home/julian/tawachai/app/templates/_project.html", line 3, in top-level template code
+    <th rowspan="3"><img src="{{ project.avatar(64) }}"></th>
+jinja2.exceptions.UndefinedError: 'dict object' has no attribute 'avatar'
+2020-04-21 13:28:29,235 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 13:28:31,803 ERROR: Exception on /user/john [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 89, in user
+    projects = Project.query.filter_by(created_by = username).all()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 1850, in filter_by
+    clauses = [
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 1851, in <listcomp>
+    _entity_descriptor(self._joinpoint_zero(), key) == value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/sql/operators.py", line 365, in __eq__
+    return self.operate(eq, other)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/attributes.py", line 218, in operate
+    return op(self.comparator, *other, **kwargs)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/relationships.py", line 1207, in __eq__
+    self.property._optimized_compare(
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/relationships.py", line 1581, in _optimized_compare
+    state = attributes.instance_state(state)
+AttributeError: 'str' object has no attribute '_sa_instance_state'
+2020-04-21 13:28:34,826 ERROR: Exception on /user/john [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/routes.py", line 89, in user
+    projects = Project.query.filter_by(created_by = username).all()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 1850, in filter_by
+    clauses = [
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/query.py", line 1851, in <listcomp>
+    _entity_descriptor(self._joinpoint_zero(), key) == value
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/sql/operators.py", line 365, in __eq__
+    return self.operate(eq, other)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/attributes.py", line 218, in operate
+    return op(self.comparator, *other, **kwargs)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/relationships.py", line 1207, in __eq__
+    self.property._optimized_compare(
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/orm/relationships.py", line 1581, in _optimized_compare
+    state = attributes.instance_state(state)
+AttributeError: 'str' object has no attribute '_sa_instance_state'
+2020-04-21 13:31:21,561 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]

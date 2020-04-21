@@ -2,7 +2,20 @@
 
 {% block content %}
     <h1>Hi, {{ current_user.first_name }}!</h1>
+	{% if form %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(cols=32, rows=4) }}<br>
+            {% for error in form.name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+	{% endif %}
     {% for project in projects %}
-    <div><p>{{ project.name }} created by {{ project.created_by.first_name }}</p></div>
+		{% include '_project.html' %}
     {% endfor %}
 {% endblock %}
