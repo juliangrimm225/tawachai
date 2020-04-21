@@ -5,9 +5,9 @@
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
-            {{ form.email.label }}<br>
-            {{ form.email(size=32) }}<br>
-            {% for error in form.email.errors %}
+            {{ form.login_name.label }}<br>
+            {{ form.login_name(size=32) }}<br>
+            {% for error in form.login_name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
@@ -21,4 +21,5 @@
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
         <p>{{ form.submit() }}</p>
     </form>
+	<p><a href="{{ url_for('register') }}">New User? Click here to register!</a></p>
 {% endblock %}

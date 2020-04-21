@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Hi, {{ user.first_name }}!</h1>
+    <h1>Hi, {{ current_user.first_name }}!</h1>
     {% for project in projects %}
     <div><p>{{ project.name }} created by {{ project.created_by.first_name }}</p></div>
     {% endfor %}
