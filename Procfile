@@ -1,1 +1,1 @@
-web: gunicorn tawachai:app
+web: flask db upgrade, gunicorn tawachai:app
