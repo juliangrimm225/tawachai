@@ -51,6 +51,7 @@ class User(UserMixin, db.Model):
         return User.query.get(id)
 
 class Project(db.Model):
+    __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)

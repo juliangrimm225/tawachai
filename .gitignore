@@ -1,6 +1,7 @@
 Microblog
 d]
 
+*.env
 # C extensions
 *.so
 
@@ -35,6 +36,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
 
 venv
 app.db
