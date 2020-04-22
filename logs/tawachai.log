@@ -19,3 +19,4 @@ Traceback (most recent call last):
 KeyError: 'POSTS_PER_PAGE'
 2020-04-22 10:27:18,514 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
 2020-04-22 10:28:10,345 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
+2020-04-22 10:29:49,540 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
