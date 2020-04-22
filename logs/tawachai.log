@@ -45,3 +45,6 @@ Traceback (most recent call last):
     page, current_app.config['PROJECTS_PER_PAGE'], False)
 KeyError: 'PROJECTS_PER_PAGE'
 2020-04-22 16:02:49,442 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:40:46,555 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:41:06,695 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:41:17,587 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
