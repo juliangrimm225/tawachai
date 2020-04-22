@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+	<h1>Search Results</h1>
+	{% for project in projects %}
+		{% include '_project.html' %}
+	{% endfor %}
+	{% include '_pagination_links.html' %}
+{% endblock %}

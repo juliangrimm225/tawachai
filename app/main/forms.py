@@ -3,6 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import DataRequired, Email, ValidationError, EqualTo, Length
 from sqlalchemy import func
 from app.models import User
+from flask import request
 
 
 class EditProfileForm(FlaskForm):
@@ -25,3 +26,12 @@ class ProjectForm(FlaskForm):
     name = StringField('Create a new project!', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class SearchForm(FlaskForm):
+    q = StringField('Search', validators=[DataRequired()])
+
+    def __init__(self, *args, **kwargs):
+        if 'formdata' not in kwargs:
+            kwargs['formdata'] = request.args
+        if 'csrf_enabled' not in kwargs:
+            kwargs['csrf_enabled'] = False
+        super(SearchForm, self).__init__(*args, **kwargs)

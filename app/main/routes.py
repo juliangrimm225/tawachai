@@ -7,12 +7,15 @@ from app.models import User, Project
 from app import db
 from app.main.forms import EditProfileForm, ProjectForm
 from app.main import bp
+from flask import g
+from app.main.forms import SearchForm
 
 @bp.before_app_request
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+        g.search_form = SearchForm()
 
 
 @bp.route('/',methods=['GET','POST'])
@@ -76,3 +79,17 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile', form=form)
 
+@bp.route('/search')
+@login_required
+def search():
+    if not g.search_form.validate():
+        return redirect(url_for('main.explore'))
+    page = request.args.get('page', 1, type=int)
+    projects, total = Project.search(g.search_form.q.data, page,
+        current_app.config['PROJECTS_PER_PAGE'])
+    next_url = url_for('main.search', q=g.search_form.q.data, page= page +1) \
+        if total > page * current_app.config['PROJECTS_PER_PAGE'] else None
+    prev_url = url_for('main.search', q=g.search_form.q.data, page = page -1) \
+        if page > 1 else None
+    return render_template('search.html', title ='Search', projects=projects, next_url=next_url, prev_url=prev_url)
+    

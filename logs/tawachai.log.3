@@ -1,4 +1,4 @@
-2020-04-21 12:54:52,946 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2020-04-21 14:01:03,237 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -14,10 +14,21 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 70, in index
-    if form.validate_on_submit():
-AttributeError: 'ProjectForm' object has no attribute 'validate_on_submit'
-2020-04-21 12:54:56,231 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+  File "/home/julian/tawachai/app/routes.py", line 80, in index
+    if posts.has_next else None
+NameError: name 'posts' is not defined
+2020-04-21 14:03:01,090 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 14:06:57,525 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+2020-04-21 14:15:21,287 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:45]
+2020-04-21 14:57:52,458 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:45]
+2020-04-21 14:58:37,974 ERROR: Exception on /reset_password_request [POST] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 726, in __getattr__
+    return getattr(self.comparator, key)
+AttributeError: 'Comparator' object has no attribute 'first'
+
+The above exception was the direct cause of the following exception:
+
 Traceback (most recent call last):
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -31,13 +42,15 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 70, in index
-    if form.validate_on_submit():
-AttributeError: 'ProjectForm' object has no attribute 'validate_on_submit'
-2020-04-21 12:57:12,333 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 12:57:16,232 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+  File "/home/julian/tawachai/app/routes.py", line 135, in reset_password_request
+    user = User.query.filter(func.upper(User.email) == func.upper(form.email.data).first())
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/sql/elements.py", line 728, in __getattr__
+    util.raise_(
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 178, in raise_
+    raise exception
+AttributeError: Neither 'Function' object nor 'Comparator' object has an attribute 'first'
+2020-04-21 14:59:28,084 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:45]
+2020-04-21 14:59:41,217 ERROR: Exception on /reset_password_request [POST] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -51,89 +64,24 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 70, in index
-    if form.validate_on_submit():
-AttributeError: 'ProjectForm' object has no attribute 'validate_on_submit'
-2020-04-21 12:57:49,533 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 12:57:52,071 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 86, in index
-    return render_template('index.html', title='Home', form=form, projects=projects)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 137, in render_template
-    return _render(
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 120, in _render
-    rv = template.render(context)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
-    self.environment.handle_exception()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "/home/julian/tawachai/app/templates/index.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "/home/julian/tawachai/app/templates/base.html", line 30, in top-level template code
-    {% block content %}{% endblock %}
-  File "/home/julian/tawachai/app/templates/index.html", line 10, in block "content"
-    {% for error in form.post.errors %}
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 471, in getattr
-    return getattr(obj, attribute)
-jinja2.exceptions.UndefinedError: 'app.forms.ProjectForm object' has no attribute 'post'
-2020-04-21 12:58:29,092 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 13:04:11,709 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 13:04:15,883 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 76, in index
-    projects = Projects.query.order_by(Project.timetstamp.desc()).all()
-NameError: name 'Projects' is not defined
-2020-04-21 13:04:38,611 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 13:04:45,030 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
-    return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/routes.py", line 76, in index
-    projects = Project.query.order_by(Project.timetstamp.desc()).all()
-AttributeError: type object 'Project' has no attribute 'timetstamp'
-2020-04-21 13:05:06,394 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
-2020-04-21 13:08:50,819 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:43]
+  File "/home/julian/tawachai/app/routes.py", line 137, in reset_password_request
+    send_password_reset_email(user)
+  File "/home/julian/tawachai/app/email.py", line 14, in send_password_reset_email
+    sender=app.config['ADMINS'][0],
+NameError: name 'app' is not defined
+2020-04-21 15:00:36,684 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:45]
+2020-04-21 15:11:15,670 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:11:21,367 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:44:10,599 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:50:34,722 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:55:47,013 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 15:59:06,800 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:04:38,595 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:06:50,879 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:07:32,664 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:08:15,594 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:08:37,063 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:47]
+2020-04-21 16:13:33,163 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:49]
+2020-04-21 16:14:54,849 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:49]
+2020-04-21 16:18:37,298 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:49]
+2020-04-21 17:15:48,384 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:58]
