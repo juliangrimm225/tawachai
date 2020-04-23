@@ -99,6 +99,7 @@ class Project(SearchableMixin, db.Model):
     name = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'))
+    nodes = db.relationship('Node', backref='project', lazy='dynamic')
 
     def __repr__(self):
         return '<Project {}>'.format(self.name)
@@ -107,4 +108,13 @@ class Project(SearchableMixin, db.Model):
         digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
+def uid_gen() -> str:
+    uid = str(uuid4())
+    return "{}@{}.org".format(uid, uid[:4])
 
+class Node(db.Model):
+    id = db.Column(db.String, primary_key=True, default=uid_gen())
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    name = db.Column(db.String(140))
+    end = db.Column(db.DateTime, default=datetime.utcnow())
+    

@@ -9,6 +9,7 @@ from app.main.forms import EditProfileForm, ProjectForm
 from app.main import bp
 from flask import g
 from app.main.forms import SearchForm
+from datetime import datetime
 
 @bp.before_app_request
 def before_request():
@@ -60,8 +61,26 @@ def user(username):
         if projects.has_next else None
     prev_url = url_for('main.user', username=user.username, page=projects.prev_num) \
         if projects.has_prev else None
-    return render_template('user.html', user=user, projects=projects.items, next_url=next_url, prev_url=prev_url)
+    return render_template('user.html', user=user, title=user.username, projects=projects.items, next_url=next_url, prev_url=prev_url)
 
+@bp.route('/project/<projectid>')
+@login_required
+def project(projectid):
+    project = Project.query.filter_by(id = projectid).first_or_404()
+    nodes = [
+        { 
+            'type':'VTODO',
+            'name': 'Summary of first todo',
+            'end' : 'bis in 2 Stunden',
+            'completed': ''
+        }, {
+            'type':'VTODO',
+            'name': 'Summary of second todo',
+            'end' : 'bis vor 3 Stunden',
+            'completed': datetime.utcnow()
+        }
+    ]
+    return render_template('project.html', project = project, nodes=nodes, title = project.name)
 
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
