@@ -1,26 +1,4 @@
-2020-04-22 10:14:23,318 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
-Traceback (most recent call last):
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
-    raise value
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1948, in full_dispatch_request
-    rv = self.preprocess_request()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2242, in preprocess_request
-    rv = func()
-  File "/home/julian/tawachai/app/main/routes.py", line 18, in before_request
-    g.search_form = SearchForm()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/wtforms/form.py", line 212, in __call__
-    return type.__call__(cls, *args, **kwargs)
-  File "/home/julian/tawachai/app/main/forms.py", line 34, in __init__
-    kwargs['formdata'] = request.args
-NameError: name 'request' is not defined
-2020-04-22 10:14:45,124 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
-2020-04-22 10:14:46,475 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+2020-04-22 10:25:12,538 ERROR: Exception on /search [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
     response = self.full_dispatch_request()
@@ -36,45 +14,42 @@ Traceback (most recent call last):
     return self.view_functions[rule.endpoint](**req.view_args)
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
     return func(*args, **kwargs)
-  File "/home/julian/tawachai/app/main/routes.py", line 39, in index
-    return render_template('index.html', title='Home', form=form, projects=projects.items, next_url=next_url, prev_url=prev_url)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 137, in render_template
-    return _render(
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/templating.py", line 120, in _render
-    rv = template.render(context)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 1090, in render
-    self.environment.handle_exception()
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/environment.py", line 832, in handle_exception
-    reraise(*rewrite_traceback_stack(source=source))
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/jinja2/_compat.py", line 28, in reraise
-    raise value.with_traceback(tb)
-  File "/home/julian/tawachai/app/templates/index.html", line 2, in top-level template code
-    {% import 'bootstrap/wtf.html' as wtf %}
-  File "/home/julian/tawachai/app/templates/base.html", line 1, in top-level template code
-    {% extends 'bootstrap/base.html' %}
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 1, in top-level template code
-    {% block doc -%}
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 4, in block "doc"
-    {%- block html %}
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 20, in block "html"
-    {% block body -%}
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_bootstrap/templates/bootstrap/base.html", line 21, in block "body"
-    {% block navbar %}
-  File "/home/julian/tawachai/app/templates/base.html", line 30, in block "navbar"
-    <form class="navbar-form navbar-left" method="get" action="{{ url_for('main.search') }}">
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/helpers.py", line 370, in url_for
-    return appctx.app.handle_url_build_error(error, endpoint, values)
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2216, in handle_url_build_error
+  File "/home/julian/tawachai/app/main/routes.py", line 89, in search
+    current_app.config['POSTS_PER_PAGE'])
+KeyError: 'POSTS_PER_PAGE'
+2020-04-22 10:27:18,514 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
+2020-04-22 10:28:10,345 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
+2020-04-22 10:29:49,540 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
+2020-04-22 11:01:09,556 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 11:01:20,600 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 11:01:28,484 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 11:08:42,135 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:02:13,025 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:02:16,822 ERROR: Exception on / [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+Traceback (most recent call last):
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
     reraise(exc_type, exc_value, tb)
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
     raise value
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/helpers.py", line 357, in url_for
-    rv = url_adapter.build(
-  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/werkzeug/routing.py", line 2179, in build
-    raise BuildError(endpoint, values, method, self)
-werkzeug.routing.BuildError: Could not build url for endpoint 'main.search'. Did you mean 'main.user' instead?
-2020-04-22 10:25:00,966 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:70]
-2020-04-22 10:25:07,722 ERROR: Exception on /favicon.ico [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask_login/utils.py", line 272, in decorated_view
+    return func(*args, **kwargs)
+  File "/home/julian/tawachai/app/main/routes.py", line 34, in index
+    page, current_app.config['PROJECTS_PER_PAGE'], False)
+KeyError: 'PROJECTS_PER_PAGE'
+2020-04-22 16:02:49,442 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:40:46,555 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:41:06,695 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:41:17,587 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:51:41,366 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-22 16:52:32,190 ERROR: Exception on /favicon.ico [GET] [in /home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py:1891]
 Traceback (most recent call last):
   File "/home/julian/tawachai/venv/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
     rv = self.dispatch_request()
@@ -120,3 +95,12 @@ Traceback (most recent call last):
   File "/home/julian/tawachai/app/templates/errors/404.html", line 8, in template
     {% endblock %}
 jinja2.exceptions.TemplateSyntaxError: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2020-04-22 16:54:04,225 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:42:01,814 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:43:19,883 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:44:43,699 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:45:27,007 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:47:13,899 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:50:58,156 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 09:58:20,679 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 10:06:19,405 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
