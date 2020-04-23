@@ -77,3 +77,5 @@ Traceback (most recent call last):
 jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got '.'
 2020-04-23 10:09:03,282 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
 2020-04-23 10:15:48,673 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 10:23:08,605 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
+2020-04-23 10:24:26,508 INFO: tawachai startup [in /home/julian/tawachai/app/__init__.py:75]
