@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from werkzeug.urls import url_parse
 from flask_login import current_user, login_required
 from sqlalchemy import func
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.models import User, Project, Node
 from app import db
 from app.main.forms import EditProfileForm, ProjectForm
@@ -10,6 +10,7 @@ from app.main import bp
 from flask import g
 from app.main.forms import SearchForm, NodeForm
 from datetime import datetime
+from ics import Calendar, Todo, Event
 
 @bp.before_app_request
 def before_request():
@@ -79,6 +80,22 @@ def project(projectid):
     nodes = Node.query.filter_by(project=project).all()
     return render_template('project.html', project = project, form=form,  nodes=nodes, title = project.name)
 
+@bp.route('/project/<projectid>/ics', methods=['GET', 'POST'])
+@login_required
+def project_calendar(projectid):
+    project = Project.query.filter_by(id = projectid).first_or_404()
+    nodes = Node.query.filter_by(project = project).all()
+    c = Calendar()
+    c.name = project.name
+    for node in nodes:
+        n = Event()
+        n.uid = node.id
+        n.name = node.name
+        n.begin = node.end + timedelta(minutes=-30)
+        n.end = node.end
+        c.todos.add(n)
+    ical = str(c).replace('\r\n', '<br>')
+    return render_template('calendar.html', ical=ical)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required

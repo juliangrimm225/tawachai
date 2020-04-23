@@ -9,6 +9,8 @@
             </td>
             <td>
 				<h1>{{ project.name }}</h1>
+				ICS Calendar is found 
+				<a href="{{ url_for('main.project_calendar', projectid=project.id)}}"> here </a>
             </td>
         </tr>
     </table>

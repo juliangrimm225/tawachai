@@ -38,6 +38,7 @@ nosetests.xml
 .pydevproject
 
 
+my.ics
 venv
 app.db
 tawachai.log*
