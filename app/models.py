@@ -8,6 +8,7 @@ from hashlib import md5
 from time import time
 import jwt
 from app.search import add_to_index, remove_from_index, query_index
+from uuid import uuid4
 
 class SearchableMixin(object):
     @classmethod
