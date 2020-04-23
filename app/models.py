@@ -64,6 +64,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     projects = db.relationship('Project', backref='created_by', lazy='dynamic')
+    nodes_creation = db.relationship('Node', backref='created_by', lazy='dynamic')
 
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
@@ -118,4 +119,8 @@ class Node(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     name = db.Column(db.String(140))
     end = db.Column(db.DateTime, default=datetime.utcnow())
+    completed = db.Column(db.String(32))
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
+    def __repr__(self):
+        return '<Node {}>'.format(self.name)

@@ -1,11 +1,14 @@
-</table>
     <table class="table table-hover">
         <tr>
             <td width="70px">
                     <img src="{{ project.avatar(70) }}" />
             </td>
             <td>
-				<b>{{ project.name }}</b></br>
+				<b>
+					<a href="{{ url_for('main.project', projectid=project.id) }}">
+					{{ project.name }}
+					</a>
+				</b></br>
 				Here some data about the project....</br>
 				<i>Created by 
                 	<a href="{{ url_for('main.user', username=project.created_by.username) }}">

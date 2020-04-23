@@ -3,12 +3,12 @@ from werkzeug.urls import url_parse
 from flask_login import current_user, login_required
 from sqlalchemy import func
 from datetime import datetime
-from app.models import User, Project
+from app.models import User, Project, Node
 from app import db
 from app.main.forms import EditProfileForm, ProjectForm
 from app.main import bp
 from flask import g
-from app.main.forms import SearchForm
+from app.main.forms import SearchForm, NodeForm
 from datetime import datetime
 
 @bp.before_app_request
@@ -63,24 +63,21 @@ def user(username):
         if projects.has_prev else None
     return render_template('user.html', user=user, title=user.username, projects=projects.items, next_url=next_url, prev_url=prev_url)
 
-@bp.route('/project/<projectid>')
+@bp.route('/project/<projectid>', methods=['GET', 'POST'])
 @login_required
 def project(projectid):
     project = Project.query.filter_by(id = projectid).first_or_404()
-    nodes = [
-        { 
-            'type':'VTODO',
-            'name': 'Summary of first todo',
-            'end' : 'bis in 2 Stunden',
-            'completed': ''
-        }, {
-            'type':'VTODO',
-            'name': 'Summary of second todo',
-            'end' : 'bis vor 3 Stunden',
-            'completed': datetime.utcnow()
-        }
-    ]
-    return render_template('project.html', project = project, nodes=nodes, title = project.name)
+
+    form = NodeForm()
+    if form.validate_on_submit():
+        node = Node(name=form.name.data, end=form.end.data, project=project, created_by=current_user)
+        db.session.add(node)
+        db.session.commit()
+        flash('Added new task.')
+        return redirect(url_for('main.project', projectid=project.id))
+        
+    nodes = Node.query.filter_by(project=project).all()
+    return render_template('project.html', project = project, form=form,  nodes=nodes, title = project.name)
 
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
@@ -112,3 +109,4 @@ def search():
         if page > 1 else None
     return render_template('search.html', title ='Search', projects=projects, next_url=next_url, prev_url=prev_url)
     
+

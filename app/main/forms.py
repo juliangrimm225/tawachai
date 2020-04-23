@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms.fields.html5 import DateTimeLocalField
 from wtforms.validators import DataRequired, Email, ValidationError, EqualTo, Length
 from sqlalchemy import func
 from app.models import User
@@ -24,6 +25,12 @@ class EditProfileForm(FlaskForm):
 
 class ProjectForm(FlaskForm):
     name = StringField('Create a new project!', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class NodeForm(FlaskForm):
+    input_format = '%Y-%m-%dT%H:%M'
+    name = StringField('New Node', validators=[DataRequired()])
+    end = DateTimeLocalField('Pick a Due Date (Format: '+ input_format, format = input_format)
     submit = SubmitField('Submit')
 
 class SearchForm(FlaskForm):
