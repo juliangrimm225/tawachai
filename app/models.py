@@ -55,17 +55,6 @@ db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 def load_user(id):
     return User.query.get(int(id))
 
-OrganisationUsers = db.Table('OrganisationUsers',
-    db.Column('id', db.Integer, primary_key=True),
-    db.Column('organisation_id', db.Integer, db.ForeignKey('Organisation.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('User.id')),
-    db.Column('type', db.String))
-
-GroupUsers = db.Table('GroupUsers',
-    db.Column('id', db.Integer, primary_key=True),
-    db.Column('group_id', db.Integer, db.ForeignKey('Group.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('User.id')),
-    db.Column('type', db.String))
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -76,8 +65,6 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     projects = db.relationship('Project', backref='created_by', lazy='dynamic')
     nodes_creation = db.relationship('Node', backref='created_by', lazy='dynamic')
-    groups = db.relationship('Group', secondary=GroupUsers, backref='Users')
-    organisations = db.relationship('Organisation', secondary=OrganisationUsers, backref='Users')
 
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
@@ -142,7 +129,6 @@ class Node(db.Model):
 class Organisation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    users = db.relationship('User', secondary=OrganisationUsers, backref='Organisation')
 
     def avatar(self, size):
         digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()
@@ -152,7 +138,6 @@ class Organisation(db.Model):
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    users = db.relationship('User', secondary=OrganisationUsers, backref='Group')
 
     def avatar(self, size):
         digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()

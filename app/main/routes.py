@@ -10,7 +10,6 @@ from app.main import bp
 from flask import g
 from app.main.forms import SearchForm, NodeForm
 from datetime import datetime
-from ics import Calendar, Todo, Event
 
 @bp.before_app_request
 def before_request():
@@ -71,7 +70,7 @@ def project(projectid):
 
     form = NodeForm()
     if form.validate_on_submit():
-        node = Node(name=form.name.data, end=form.end.data, project=project, created_by=current_user)
+        node = Node(name=form.name.data, project=project, created_by=current_user)
         db.session.add(node)
         db.session.commit()
         flash('Added new task.')
@@ -80,22 +79,6 @@ def project(projectid):
     nodes = Node.query.filter_by(project=project).all()
     return render_template('project.html', project = project, form=form,  nodes=nodes, title = project.name)
 
-@bp.route('/project/<projectid>/ics', methods=['GET', 'POST'])
-@login_required
-def project_calendar(projectid):
-    project = Project.query.filter_by(id = projectid).first_or_404()
-    nodes = Node.query.filter_by(project = project).all()
-    c = Calendar()
-    c.name = project.name
-    for node in nodes:
-        n = Event()
-        n.uid = node.id
-        n.name = node.name
-        n.begin = node.end + timedelta(minutes=-30)
-        n.end = node.end
-        c.todos.add(n)
-    ical = str(c).replace('\r\n', '<br>')
-    return render_template('calendar.html', ical=ical)
 
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required

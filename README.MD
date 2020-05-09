@@ -29,11 +29,3 @@ Done:
 Todo:
 
 * Bring it online
-	* Remove ics package -> remove export functionality
-	* test
-	* test 
-* Edit projects
-* Edit nodes
-* Add organisations and project groups
-    * Do I need only project members or groups with multiple projects?
-* Export unordered list as ICS
