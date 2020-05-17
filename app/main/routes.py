@@ -63,23 +63,6 @@ def user(username):
         if projects.has_prev else None
     return render_template('user.html', user=user, title=user.username, projects=projects.items, next_url=next_url, prev_url=prev_url)
 
-@bp.route('/project/<projectid>', methods=['GET', 'POST'])
-@login_required
-def project(projectid):
-    project = Project.query.filter_by(id = projectid).first_or_404()
-
-    form = NodeForm()
-    if form.validate_on_submit():
-        node = Node(name=form.name.data, project=project, created_by=current_user)
-        db.session.add(node)
-        db.session.commit()
-        flash('Added new task.')
-        return redirect(url_for('main.project', projectid=project.id))
-        
-    nodes = Node.query.filter_by(project=project).all()
-    return render_template('project.html', project = project, form=form,  nodes=nodes, title = project.name)
-
-
 @bp.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
@@ -108,5 +91,45 @@ def search():
     prev_url = url_for('main.search', q=g.search_form.q.data, page = page -1) \
         if page > 1 else None
     return render_template('search.html', title ='Search', projects=projects, next_url=next_url, prev_url=prev_url)
+
+@bp.route('/project/<projectid>', methods=['GET', 'POST'])
+@login_required
+def project(projectid):
+    project = Project.query.filter_by(id = projectid).first_or_404()
+
+    form = NodeForm()
+    if form.validate_on_submit():
+        node = Node(name=form.name.data, project=project, created_by=current_user)
+        db.session.add(node)
+        db.session.commit()
+        flash('Added new task.')
+        return redirect(url_for('main.project', projectid=project.id))
+        
+    nodes = Node.query.filter_by(project=project).all()
+    return render_template('project.html', project = project, form=form,  nodes=nodes, title = project.name)
+
+@bp.route('/node/<nodeid>', methods=['GET', 'POST'])
+@login_required
+def node(nodeid):
+    current_node = Node.query.filter_by(id = nodeid).first_or_404()
+
+    form = NodeForm()
+    if form.validate_on_submit():
+        if Node.query.filter_by(id = form.name.data).count() == 1:
+            current_node.add_source(Node.query.filter_by(id = form.name.data).first())
+            db.session.commit()
+            flash('Added existing node as source')
+        else:
+            project = current_node.project
+            node = Node(name=form.name.data, project=project, created_by=current_user)
+            current_node.add_source(node)
+            db.session.add(node)
+            db.session.commit()
+            flash('Added new node as source')
+        return redirect(url_for('main.node', nodeid=current_node.id))
+            
+
+    return render_template('node.html', node = current_node, form = form, title = current_node.name)
+
     
 

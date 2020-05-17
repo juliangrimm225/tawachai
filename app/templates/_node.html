@@ -1,4 +1,3 @@
-</table>
     <table class="table table-hover">
         <tr>
             <td width="70px">
@@ -9,8 +8,12 @@
 				{% endif %}
             </td>
             <td>
-				<b>{{ node.name }}</b></br>
-				Due: {{ node.end }}</br>
+				<b>
+					<a href="{{ url_for('main.node', nodeid=node.id) }}">
+					{{ node.name }} (ID: {{node.id}})
+					</a>
+					</b></br>
+				
 				<i>
 				Created by {{ node.created_by.first_name }} {{ node.created_by.last_name }}
 				</i>

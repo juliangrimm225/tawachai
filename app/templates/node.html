@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <table class="table table-hover">
+        <tr>
+            <td width="128px">
+                    <img src="{{ node.avatar(128) }}" />
+            </td>
+            <td>
+				<h1>{{ node.name }}</h1>
+Project: <a href="{{ url_for('main.project', projectid=node.project_id) }}">{{ node.project.name }}</a></br>
+				<i>
+				Created by {{ node.created_by.first_name }} {{ node.created_by.last_name }}
+				</i>
+            </td>
+        </tr>
+    </table>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+	<h2>Sub Nodes</h2>
+	{% for node in node.sources() %}
+		{% include '_node.html' %}
+	{% endfor %}
+	</br>
+	<h2>Super Nodes</h2>
+	{% for node in node.sinks() %}
+		{% include '_node.html' %}
+	{% endfor %}
+	</br>
+{% endblock %}

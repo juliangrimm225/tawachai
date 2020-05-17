@@ -114,32 +114,79 @@ def uid_gen() -> str:
     uid = str(uuid4())
     return "{}@{}.org".format(uid, uid[:4])
 
-class Node(db.Model):
+
+# Model for Nodes
+# Nodes are part of a project
+# A project is finished when all nodes are completed
+# Nodes have a relationship with each other 
+
+class Edge(db.Model):
+    __tablename__ = 'edge'
     id = db.Column(db.Integer, primary_key=True)
-    uid = db.Column(db.String, default=uid_gen())
+    source_id = db.Column(db.Integer, db.ForeignKey('node.id'))
+    sink_id = db.Column(db.Integer, db.ForeignKey('node.id'))
+
+    def __repr__(self):
+        return '<Source {}, Sink {}>'.format(self.source_id, self.sink_id)
+
+class Node(db.Model):
+    __tablename__ = 'node'
+    id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     name = db.Column(db.String(140))
-    end = db.Column(db.DateTime, default=datetime.utcnow())
-    completed = db.Column(db.String(32))
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    
+
+    edges_sinks = db.relationship('Edge', backref='source', primaryjoin=id==Edge.source_id, lazy='dynamic', cascade="all, delete-orphan")
+    edges_sources = db.relationship('Edge', backref='sink', primaryjoin=id==Edge.sink_id, lazy='dynamic', cascade="all, delete-orphan")
+
     def __repr__(self):
         return '<Node {}>'.format(self.name)
 
-class Organisation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-
     def avatar(self, size):
-        digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()
+        digest = md5(str(self.name.lower()).lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
+    def sources(self):
+        lst = []
+        edges = self.edges_sources.all()
+        for e in edges:
+            node = e.source
+            lst.append(node)
+        return lst
+
+    def sinks(self):
+        lst = []
+        edges = self.edges_sinks.all()
+        for e in edges:
+            node = e.sink
+            lst.append(node)
+        return lst
+
+    def is_sink_for(self, node):
+        return self.edges_sources.filter(Edge.source_id == node.id).count()>0
+
+    def is_source_for(self, node):
+        return self.edges_sinks.filter(Edge.sink_id == node.id).count()>0
+
+    def is_connected_to(self, node):
+        return self.is_sink_for(node) or self.is_source_for(node) or self == node
+
+    def add_sink(self, node):
+        if not self.is_connected_to(node):
+            e = Edge()
+            e.sink = node
+            e.source = self
+            self.edges_sinks.append(e)
+
+    def add_source(self, node):
+        node.add_sink(self)
+
+    def remove_sink(self, node):
+        if self.is_source_for(node):
+            e = self.edges_sinks.filter(Edge.sink_id == node.id).first()
+            self.edges_sinks.remove(e)
+
+    def remove_source(self, node):
+        node.remove_sink(self)
         
-class Group(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-
-    def avatar(self, size):
-        digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
