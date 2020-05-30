@@ -1,31 +1,15 @@
-Read Me for tawachai
-===================
+tawachai
+============
 
-Goals
---------
+tawachai is a project of Julian Grimm. The goal is a web application that combines graph theory with a calendar.
 
-1. Manage a list.
-2. Import and Export calendars to handle the list.
-3. Create an optimal order for nodes.
-4. Visualise the list as a mindmap/flowchart.
+The design is based on the [Flask Mega-Tutorial][1] by Miguel Grinberg.
 
-As a plan consists of todos and tasks, I group both of them under the term node.
+I did not have any coding experience in the beginning. Therefore:
+* The code is very messy and not optimized
+* There may be structural things that could be changed
+* The updates here on github are extremly messy
 
-Therefore, the project consists of three big parts:
+I am working actively on fixing my lack of skill and with it the code.
 
-* Creating/Editing nodes
-* Optimizing the nodes
-* Visualizing the whole thing
-
-Project Plan
-------------
-
-Done:
-
-* User can register and login
-* User can create projects and corresponding nodes 
-
-
-Todo:
-
-* Bring it online
+[1]: https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world

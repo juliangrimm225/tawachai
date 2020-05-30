@@ -115,7 +115,12 @@ def node(nodeid):
 
     form = NodeForm()
     if form.validate_on_submit():
-        if Node.query.filter_by(id = form.name.data).count() == 1:
+        node2 = Node.query.filter_by(id = form.name.data).first()
+        if node2 in current_node.sources():
+            current_node.remove_source(node2)
+            db.session.commit()
+            flash('Removed existing node as source')
+        elif Node.query.filter_by(id = form.name.data).count() == 1:
             current_node.add_source(Node.query.filter_by(id = form.name.data).first())
             db.session.commit()
             flash('Added existing node as source')
