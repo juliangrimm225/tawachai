@@ -57,6 +57,7 @@ def load_user(id):
 
 
 class User(UserMixin, db.Model):
+    """ This class describes the user """
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(64))
     last_name = db.Column(db.String(64))
@@ -96,6 +97,7 @@ class User(UserMixin, db.Model):
         return User.query.get(id)
 
 class Project(SearchableMixin, db.Model):
+    """A Project contains nodes."""
     __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
@@ -130,6 +132,7 @@ class Edge(db.Model):
         return '<Source {}, Sink {}>'.format(self.source_id, self.sink_id)
 
 class Node(db.Model):
+    """Nodes are the basic elements of a project. Each node can only be in one project. They are connected via edges."""
     __tablename__ = 'node'
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
@@ -147,6 +150,7 @@ class Node(db.Model):
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
     def sources(self):
+        """Create  list of nodes that are sources"""
         lst = []
         edges = self.edges_sources.all()
         for e in edges:
@@ -155,6 +159,7 @@ class Node(db.Model):
         return lst
 
     def sinks(self):
+        """Create a list of nodes that are sinks"""
         lst = []
         edges = self.edges_sinks.all()
         for e in edges:
@@ -163,15 +168,19 @@ class Node(db.Model):
         return lst
 
     def is_sink_for(self, node):
+        """Check if self is a sink for node"""
         return self.edges_sources.filter(Edge.source_id == node.id).count()>0
 
     def is_source_for(self, node):
+        """Check if self is a source for node"""
         return self.edges_sinks.filter(Edge.sink_id == node.id).count()>0
 
     def is_connected_to(self, node):
+        """Check if self is either sink or source or identical to node"""
         return self.is_sink_for(node) or self.is_source_for(node) or self == node
 
     def add_sink(self, node):
+        """add a node as a sink"""
         if not self.is_connected_to(node):
             e = Edge()
             e.sink = node
@@ -179,14 +188,17 @@ class Node(db.Model):
             self.edges_sinks.append(e)
 
     def add_source(self, node):
+        """add a node as a source"""
         node.add_sink(self)
 
     def remove_sink(self, node):
+        """remove a node as a sink"""
         if self.is_source_for(node):
             e = self.edges_sinks.filter(Edge.sink_id == node.id).first()
             self.edges_sinks.remove(e)
 
     def remove_source(self, node):
+        """remove a node as a source"""
         node.remove_sink(self)
         
 
