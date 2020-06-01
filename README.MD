@@ -8,7 +8,7 @@ The design is based on the [Flask Mega-Tutorial][1] by Miguel Grinberg.
 Features:
 ---------
 
-* ![User Registration and Login](../Pictures/user_registration.png)
+* ![User Registration and Login](https://github.com/juliangrimm225/tawachai/blob/master/Pictures/user_registration.png)
 * Creation of new Projects as container for Nodes
 * Creation of Nodes in Projects
 * Addition, Removal and Creation of Sub Nodes
