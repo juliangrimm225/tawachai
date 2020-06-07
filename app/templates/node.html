@@ -10,9 +10,11 @@
             <td>
 				<h1>{{ node.name }}</h1>
 				<a href="{{ url_for('main.edit_node', nodeid=node.id) }}">Edit Node</a></br>
-Project: <a href="{{ url_for('main.project', projectid=node.project_id) }}">{{ node.project.name }}</a></br>
-				<i>
-				Created by {{ node.created_by.first_name }} {{ node.created_by.last_name }}
+				Project: <a href="{{ url_for('main.project', projectid=node.project_id) }}">{{ node.project.name }}</a></br>
+				<i>Created by 
+                	<a href="{{ url_for('main.user', username=node.created_by.username) }}">
+                    	{{ node.created_by.first_name }} {{ node.created_by.last_name }}
+                	</a>
 				</i>
             </td>
         </tr>
@@ -21,15 +23,31 @@ Project: <a href="{{ url_for('main.project', projectid=node.project_id) }}">{{ n
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
         </div>
+	</div>
+	</br>
+
+	<div class="row">
+	<button class="btn btn-light" data-toggle="collapse" data-target="#instructions">Instructions</button>
+	
+	<div id="instructions" class="collapse">
+	Enter the ID of an existing Node to add that Node as a source. </br>
+	If the two Nodes are already connected, the connection is deleted. </br>
+	Enter a text to create a new Node as source with this name!
+	</div>
+
     </div>
-	<h2>Sub Nodes</h2>
-	{% for node in node.sources() %}
-		{% include '_node.html' %}
-	{% endfor %}
-	</br>
-	<h2>Super Nodes</h2>
-	{% for node in node.sinks() %}
-		{% include '_node.html' %}
-	{% endfor %}
-	</br>
+	{% if node.sources() %}
+		<h2>Sub Nodes (Sources)</h2>
+		{% for node in node.sources() %}
+			{% include '_node.html' %}
+		{% endfor %}
+		</br>
+	{% endif %}
+	{% if node.sinks() %}
+		<h2>Super Nodes (Sinks)</h2>
+		{% for node in node.sinks() %}
+			{% include '_node.html' %}
+		{% endfor %}
+		</br>
+	{% endif %}
 {% endblock %}

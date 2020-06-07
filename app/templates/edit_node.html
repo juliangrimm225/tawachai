@@ -10,8 +10,10 @@
             <td>
 				<h1>{{ node.name }}</h1>
 Project: <a href="{{ url_for('main.project', projectid=node.project_id) }}">{{ node.project.name }}</a></br>
-				<i>
-				Created by {{ node.created_by.first_name }} {{ node.created_by.last_name }}
+				<i>Created by 
+                	<a href="{{ url_for('main.user', username=node.created_by.username) }}">
+                    	{{ node.created_by.first_name }} {{ node.created_by.last_name }}
+                	</a>
 				</i>
             </td>
         </tr>
