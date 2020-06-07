@@ -27,6 +27,10 @@ class ProjectForm(FlaskForm):
     name = StringField('Create a new project!', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class EditProjectForm(FlaskForm):
+    name = StringField('New Project Name')
+    submit = SubmitField('Submit')
+
 class NodeForm(FlaskForm):
     input_format = '%Y-%m-%dT%H:%M'
     name = StringField('New Node', validators=[DataRequired()])
@@ -42,3 +46,5 @@ class SearchForm(FlaskForm):
         if 'csrf_enabled' not in kwargs:
             kwargs['csrf_enabled'] = False
         super(SearchForm, self).__init__(*args, **kwargs)
+
+

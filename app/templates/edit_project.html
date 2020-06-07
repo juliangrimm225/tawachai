@@ -9,17 +9,12 @@
             </td>
             <td>
 				<h1>{{ project.name }}</h1>
-				<a href={{ url_for('main.edit_project', projectid=project.id) }}>Edit Project</a>
             </td>
         </tr>
     </table>
     <div class="row">
         <div class="col-md-4">
-            {{ wtf.quick_form(nodeform) }}
+            {{ wtf.quick_form(form) }}
         </div>
     </div>
-	</br>
-	{% for node in nodes %}
-		{% include '_node.html' %}
-	{% endfor %}
 {% endblock %}

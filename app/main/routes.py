@@ -5,11 +5,12 @@ from sqlalchemy import func
 from datetime import datetime, timedelta
 from app.models import User, Project, Node
 from app import db
-from app.main.forms import EditProfileForm, ProjectForm
+from app.main.forms import EditProfileForm, ProjectForm, EditProjectForm
 from app.main import bp
 from flask import g
 from app.main.forms import SearchForm, NodeForm
 from datetime import datetime
+from wtforms.fields import Label
 
 @bp.before_app_request
 def before_request():
@@ -97,16 +98,33 @@ def search():
 def project(projectid):
     project = Project.query.filter_by(id = projectid).first_or_404()
 
-    form = NodeForm()
-    if form.validate_on_submit():
-        node = Node(name=form.name.data, project=project, created_by=current_user)
+    nodeform = NodeForm()
+
+    if nodeform.submit.data and nodeform.validate_on_submit():
+        node = Node(name=nodeform.name.data, project=project, created_by=current_user)
         db.session.add(node)
         db.session.commit()
         flash('Added new task.')
         return redirect(url_for('main.project', projectid=project.id))
         
     nodes = Node.query.filter_by(project=project).all()
-    return render_template('project.html', project = project, form=form,  nodes=nodes, title = project.name)
+    return render_template('project.html', project = project, nodeform=nodeform,  nodes=nodes, title = project.name)
+
+@bp.route('/project/<projectid>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_project(projectid):
+    project = Project.query.filter_by(id = projectid).first_or_404()
+    
+    form = EditProjectForm()
+    if form.validate_on_submit():
+        project.name = form.name.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.edit_project', projectid = project.id))
+    elif request.method == 'GET':
+        form.name.data = project.name
+
+    return render_template('edit_project.html', project = project, form = form, title = project.name)
 
 @bp.route('/node/<nodeid>', methods=['GET', 'POST'])
 @login_required
@@ -114,6 +132,7 @@ def node(nodeid):
     current_node = Node.query.filter_by(id = nodeid).first_or_404()
 
     form = NodeForm()
+    form.name.label = Label(field_id = "name", text = "Connect two nodes!")
     if form.validate_on_submit():
         node2 = Node.query.filter_by(id = form.name.data).first()
         if node2 in current_node.sources():
