@@ -115,12 +115,13 @@ def project(projectid):
 def edit_project(projectid):
     project = Project.query.filter_by(id = projectid).first_or_404()
     
-    form = EditProjectForm()
+    form = ProjectForm()
+    form.name.label = Label(field_id = 'name', text = 'New Project Name')
     if form.validate_on_submit():
         project.name = form.name.data
         db.session.commit()
         flash('Your changes have been saved.')
-        return redirect(url_for('main.edit_project', projectid = project.id))
+        return redirect(url_for('main.project', projectid = project.id))
     elif request.method == 'GET':
         form.name.data = project.name
 
@@ -151,9 +152,21 @@ def node(nodeid):
             db.session.commit()
             flash('Added new node as source')
         return redirect(url_for('main.node', nodeid=current_node.id))
-            
-
     return render_template('node.html', node = current_node, form = form, title = current_node.name)
+            
+@bp.route('/node/<nodeid>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_node(nodeid):
+    current_node = Node.query.filter_by(id = nodeid).first_or_404()
 
-    
-
+    form = NodeForm()
+    form.name.label = Label(field_id = 'name', text = 'New Node Name')
+    if form.validate_on_submit():
+        current_node.name = form.name.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('main.node', nodeid = current_node.id))
+    elif request.method == 'GET':
+        form.name.data = current_node.name
+        
+    return render_template('edit_node.html', node = current_node, form = form, title = current_node.name)

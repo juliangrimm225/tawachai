@@ -36,7 +36,6 @@ class NodeForm(FlaskForm):
     name = StringField('New Node', validators=[DataRequired()])
 #    end = DateTimeLocalField('Pick a Due Date (Format: '+ input_format, format = input_format)
     submit = SubmitField('Submit')
-
 class SearchForm(FlaskForm):
     q = StringField('Search', validators=[DataRequired()])
 
