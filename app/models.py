@@ -9,6 +9,7 @@ from time import time
 import jwt
 from app.search import add_to_index, remove_from_index, query_index
 from uuid import uuid4
+from app.graphs import Graph
 
 class SearchableMixin(object):
     @classmethod
@@ -114,6 +115,15 @@ class Project(SearchableMixin, db.Model):
 
     def graph(self):
         """Returns a dictionary of the whole project that can be used as graph."""
+
+        nodes = self.nodes.all()
+
+        Dict = {}
+        for n in nodes:
+            Dict[n] = n.sinks()
+
+        graph = Graph(Dict)
+        return graph 
 
 
 def uid_gen() -> str:
