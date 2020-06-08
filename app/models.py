@@ -112,6 +112,10 @@ class Project(SearchableMixin, db.Model):
         digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
+    def graph(self):
+        """Returns a dictionary of the whole project that can be used as graph."""
+
+
 def uid_gen() -> str:
     uid = str(uuid4())
     return "{}@{}.org".format(uid, uid[:4])
