@@ -1,12 +1,11 @@
-from collections import deque
+""" Defining the Graph class"""
+class Graph():
 
-class Graph(object):
-    
-    """A simple python graph class form https://www.python-course.eu/graphs_python.php"""
+    """ A simple python graph class form https://www.python-course.eu/graphs_python.php """
 
-    def __init__(self, graph_dict = None):
+    def __init__(self, graph_dict=None):
         """ initializes a graph object """
-        if graph_dict == None:
+        if graph_dict is None:
             graph_dict = {}
         self.__graph_dict = graph_dict
 
@@ -15,10 +14,10 @@ class Graph(object):
         return list(self.__graph_dict.keys())
 
     def __generate_edges(self):
-        """ A static method generating the edges of the 
-            graph "graph". Edges are represented as sets 
-            with one (a loop back to the vertex) or two 
-            vertices 
+        """ A static method generating the edges of the
+            graph "graph". Edges are represented as sets
+            with one (a loop back to the vertex) or two
+            vertices
         """
         edges = []
         for vertex in self.__graph_dict:
@@ -31,132 +30,40 @@ class Graph(object):
         """ returns the edges of a graph """
         return self.__generate_edges()
 
-    def isolated_nodes(self):
-        isolated_nodes = []
-        for node in self.nodes():
-            if node.sinks() == [] and node.sources() == []:
-                isolated_nodes.append(node)
-        return isolated_nodes
+    @staticmethod
+    def depth_first_search(starting_node, direction='forward'):
+        """ Runs a depth first search from a node in the graph.
+        The direction can be 'forward', 'backward' or 'undirected'."""
 
-    def depth_first_search(self, starting_node, direction = 'forward'):
-        """Runs a depth first search from a node in the graph. The direction can be 'forward', 'backward' or 'undirected'."""
-        
         visited = []
-        def dfs(at):
-            if at in visited:
+        def dfs(node):
+            if node in visited:
                 return
-            else:
-                visited.append(at)
-                if direction == 'forward':
-                    neighbours = at.sinks()
-                elif direction == 'backward':
-                    neighbours = at.sources()
-                elif direction == 'undirected':
-                    neighbours = at.sinks()+at.sources()
-
-                for next in neighbours:
-                    dfs(next)
+            visited.append(node)
+            if direction == 'forward':
+                neighbours = node.sinks()
+            elif direction == 'backward':
+                neighbours = node.sources()
+            elif direction == 'undirected':
+                neighbours = node.sinks()+node.sources()
+            for neighbour in neighbours:
+                dfs(neighbour)
         dfs(starting_node)
         return visited
 
-    def is_connected(self):
-        starting_node = self.nodes()[1]
-        dfs = self.depth_first_search(starting_node = starting_node, direction = 'undirected')
-        return len(dfs) == len(starting_node)
-        
-
-    def connected_components(self):
-        nodes = self.nodes()
-        if nodes == []:
-            return []
-        components = []
+    def weak_components(self):
+        """Returns a list of the components of weak components of an directed graph."""
         visited = []
-        for n in nodes:
-            if n not in visited:
-                c = self.depth_first_search(n, direction = 'undirected')
-                components.append(c)
-                visited += c
+        components = []
+        nodes = self.nodes()
+        for node in nodes:
+            while node not in visited:
+                dfs = self.depth_first_search(starting_node=node, direction='undirected')
+                visited = visited + dfs
+                components.append(dfs)
         return components
 
-    def strongly_connected_components(self):
-        index_counter = [0]
-        stack = []
-        lowlinks = {}
-        index = {}
-        result = []
+    def strong_components(self):
+        pass
 
-        def strongconnect(node):
-            index[node] = index_counter[0]
-            lowlinks[node] = index_counter[0]
-            index_counter[0] += 1
-            stack.append(node)
-
-            try:
-                successors = node.sinks()
-            except:
-                successors = []
-            for successor in successors:
-                if successor not in lowlinks:
-                    strongconnect(successor)
-                    lowlinks[node] = min(lowlinks[node],lowlinks[successor])
-                elif successor in stack:
-                    lowlinks[node] = min(lowlinks[node], index[successor])
-
-            if lowlinks[node] == index[node]:
-                connected_component = []
-
-                while True:
-                    successor = stack.pop()
-                    connected_component.append(successor)
-                    if successor == node: break
-                component = tuple(connected_component)
-                result.append(component)
-
-        for node in self.nodes():
-            if node not in lowlinks:
-                strongconnect(node)
-
-        return result
-                
-    def topological_sort(self):
-        count = {}
-        for node in self.nodes():
-            count[node]=0
-        for node in self.nodes():
-            for successor in node.sinks():
-                count[successor] += 1
-
-        ready = [ node for node in self.nodes() if count[node] == 0 ]
-
-        result = []
-        while ready:
-            node = ready.pop(-1)
-            result.append(node)
-
-            for successor in node.sinks():
-                count[successor] -= 1
-                if count[successor] == 0:
-                    ready.append(successor)
-
-        return result
-
-    def robust_topological_sort(self):
-        components = self.strongly_connected_components()
-
-        node_component = {}
-        for component in components:
-            for node in component:
-                node_component[node] = component
-
-        component_graph = {}
-        for component in components:
-            component_graph[component] = []
-
-        for node in self.nodes():
-            node_c = node_component[node]
-            for successor in node.sinks():
-                successor_c = node_component[successor]
-                if node_c != successor_c:
-                    component_graph[node_c].append(successor_c)
-
-        return topological_sort(component_graph)
+        

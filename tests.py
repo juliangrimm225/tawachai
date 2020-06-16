@@ -1,16 +1,17 @@
-from datetime import datetime, timedelta
+"""Unittests for tawachai"""
 import unittest
 from app import create_app, db
 from app.models import User, Project, Node, Edge
 from config import Config
 
-
 class TestConfig(Config):
+    """Set up the testing configuration"""
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 
 class UserModelCase(unittest.TestCase):
+    """Set up the Test cases"""
     def setUp(self):
         self.app = create_app(TestConfig)
         self.app_context = self.app.app_context()
@@ -23,14 +24,14 @@ class UserModelCase(unittest.TestCase):
         self.app_context.pop()
 
     def test_password_hashing(self):
-        u = User(username='susan')
-        u.set_password('cat')
-        self.assertFalse(u.check_password('dog'))
-        self.assertTrue(u.check_password('cat'))
+        user = User(username='susan')
+        user.set_password('cat')
+        self.assertFalse(user.check_password('dog'))
+        self.assertTrue(user.check_password('cat'))
 
     def test_user_avatar(self):
-        u = User(username='john', email='john@example.com')
-        self.assertEqual(u.avatar(128), ('https://www.gravatar.com/avatar/'
+        user = User(username='john', email='john@example.com')
+        self.assertEqual(user.avatar(128), ('https://www.gravatar.com/avatar/'
                                          'd4c74594d841139328695756648b6bd6'
                                          '?d=identicon&s=128'))
 
@@ -58,7 +59,7 @@ class UserModelCase(unittest.TestCase):
         e.source = n1
         db.session.add(e)
         db.session.commit()
-        
+
         self.assertTrue(n0.is_sink_for(n1))
         self.assertFalse(n0.is_source_for(n1))
         self.assertTrue(n0.is_connected_to(n1))
@@ -66,7 +67,7 @@ class UserModelCase(unittest.TestCase):
         self.assertFalse(n1.is_sink_for(n0))
         self.assertTrue(n1.is_source_for(n0))
         self.assertTrue(n1.is_connected_to(n0))
-        
+
         self.assertEqual(n1.edges_sinks.all(), n0.edges_sources.all())
 
         self.assertEqual(n0.sources(), [n1])
@@ -86,7 +87,7 @@ class UserModelCase(unittest.TestCase):
         # create the following tree:
         # n2 --> n1 --> n0
         # n3 --> n0
-        
+
         n1.add_sink(n0)
         n1.add_source(n2)
         n0.add_source(n3)
@@ -96,7 +97,7 @@ class UserModelCase(unittest.TestCase):
         self.assertTrue(n1.is_source_for(n0))
         self.assertTrue(n2.is_source_for(n1))
         self.assertTrue(n0.is_sink_for(n1))
-        
+
         self.assertEqual(n0.sinks(), [])
         self.assertEqual(n0.sources(), [n1, n3])
         self.assertEqual(n1.sinks(), [n0])
@@ -142,15 +143,15 @@ class UserModelCase(unittest.TestCase):
         n2 = Node(name="Test Sink")
         n3 = Node(name="Test Source")
 
-        db.session.add_all([n1,n2,n3])
-        
+        db.session.add_all([n1, n2, n3])
+
         n1.add_sink(n2)
         n1.add_source(n3)
         db.session.commit()
 
-        self.assertFalse(Edge.query.all()==[])
-        self.assertFalse(Node.query.all()==[])
-        
+        self.assertFalse(Edge.query.all() == [])
+        self.assertFalse(Node.query.all() == [])
+
         n1.delete()
         db.session.commit()
         self.assertEqual(Node.query.all(), [n2, n3])
@@ -166,7 +167,7 @@ class UserModelCase(unittest.TestCase):
         n1.add_sink(n0)
         n1.add_source(n2)
         db.session.commit()
-        self.assertEqual(p.nodes.all(),[n0, n1, n2])
+        self.assertEqual(p.nodes.all(), [n0, n1, n2])
         p.delete()
         db.session.commit()
         self.assertEqual(Node.query.all(), [n3])
@@ -174,52 +175,19 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(Project.query.all(), [])
 
     def test_graph(self):
-        p = Project(name = "Project")
-        a = Node(name="a", project = p)
-        b = Node(name="b", project = p)
-        c = Node(name="c", project = p)
-        db.session.add_all([p, a, b, c])
-        
-        # test nodes
-        graph = p.graph()
-        self.assertEqual(graph.nodes(), [a, b , c])
-
-        # test isolated nodes
-        a.add_source(b)
-        self.assertEqual(graph.isolated_nodes(), [c])
-
-        # test depth_first_search
-        t = graph.depth_first_search(a)
-        self.assertEqual(t, [a])
-        t = graph.depth_first_search(b)
-        self.assertEqual(t, [b,a])
-
-        # test connected components
-        self.assertEqual(graph.connected_components(), [[a,b],[c]])
-
-        # test strongly connected components
-        d = Node(name="d", project = p)
-        e = Node(name="e", project = p)
-        db.session.add_all([e,d])
-        d.add_source(b)
-        b.add_source(e)
-        e.add_source(d)
+        project = Project(name="project")
+        n_1 = Node(name="n_1", project=project)
+        n_2 = Node(name="n_2", project=project)
+        n_3 = Node(name="n_3", project=project)
+        db.session.add_all([project, n_1, n_2, n_3])
         db.session.commit()
-        graph = p.graph()
-        scc = tuple(graph.strongly_connected_components())
-        scc_check = tuple([tuple([a]), tuple([e, d,b]), tuple([c])])
-        self.assertEqual(scc, scc_check)
 
-        # test topological sort
-        b.remove_source(e)
+        n_1.add_source(n_2)
         db.session.commit()
-        graph = p.graph()
-        order = graph.topological_sort()
-        for node in graph.nodes():
-            for sink in node.sinks():
-                self.assertTrue(order.index(node)<order.index(sink))
 
-
+        graph = project.graph()
+        self.assertTrue(graph)
+        self.assertEqual(graph.weak_components(), [[n_1, n_2], [n_3]])
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
