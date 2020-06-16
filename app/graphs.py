@@ -59,18 +59,23 @@ class Graph(object):
         dfs(starting_node)
         return visited
 
+    def is_connected(self):
+        starting_node = self.nodes()[1]
+        dfs = self.depth_first_search(starting_node = starting_node, direction = 'undirected')
+        return len(dfs) == len(starting_node)
+        
+
     def connected_components(self):
-        nodes = g.nodes()
+        nodes = self.nodes()
         if nodes == []:
             return []
         components = []
         visited = []
         for n in nodes:
-            if n in visited:
-                break
-            c = self.depth_first_search(n, direction = 'undirected')
-            components.append(c)
-            visited += c
+            if n not in visited:
+                c = self.depth_first_search(n, direction = 'undirected')
+                components.append(c)
+                visited += c
         return components
 
     def strongly_connected_components(self):
@@ -121,7 +126,7 @@ class Graph(object):
             for successor in node.sinks():
                 count[successor] += 1
 
-        ready = [ node for node in self if count[node] == 0 ]
+        ready = [ node for node in self.nodes() if count[node] == 0 ]
 
         result = []
         while ready:
@@ -136,7 +141,6 @@ class Graph(object):
         return result
 
     def robust_topological_sort(self):
-        
         components = self.strongly_connected_components()
 
         node_component = {}

@@ -97,7 +97,7 @@ class User(UserMixin, db.Model):
             return
         return User.query.get(id)
 
-class Project(SearchableMixin, db.Model):
+class Project(db.Model):
     """A Project contains nodes."""
     __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
@@ -125,6 +125,10 @@ class Project(SearchableMixin, db.Model):
         graph = Graph(Dict)
         return graph 
 
+    def delete(self):
+        for node in self.nodes.all():
+            node.delete()
+        db.session.delete(self)
 
 def uid_gen() -> str:
     uid = str(uuid4())
@@ -214,5 +218,13 @@ class Node(db.Model):
     def remove_source(self, node):
         """remove a node as a source"""
         node.remove_sink(self)
+    def delete(self):
+        for sink in self.sinks():
+            self.remove_sink(sink)
+        for source in self.sources():
+            self.remove_source(source)
+        db.session.delete(self)
+
+        
         
 

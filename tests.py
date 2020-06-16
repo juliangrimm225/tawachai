@@ -28,7 +28,7 @@ class UserModelCase(unittest.TestCase):
         self.assertFalse(u.check_password('dog'))
         self.assertTrue(u.check_password('cat'))
 
-    def test_avatar(self):
+    def test_user_avatar(self):
         u = User(username='john', email='john@example.com')
         self.assertEqual(u.avatar(128), ('https://www.gravatar.com/avatar/'
                                          'd4c74594d841139328695756648b6bd6'
@@ -137,7 +137,87 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(n3.sinks(), [n0])
         self.assertEqual(n3.sources(), [])
 
+    def test_delete_nodes(self):
+        n1 = Node(name="Test Node")
+        n2 = Node(name="Test Sink")
+        n3 = Node(name="Test Source")
+
+        db.session.add_all([n1,n2,n3])
         
+        n1.add_sink(n2)
+        n1.add_source(n3)
+        db.session.commit()
+
+        self.assertFalse(Edge.query.all()==[])
+        self.assertFalse(Node.query.all()==[])
+        
+        n1.delete()
+        db.session.commit()
+        self.assertEqual(Node.query.all(), [n2, n3])
+        self.assertEqual(Edge.query.all(), [])
+
+    def test_delete_project(self):
+        p = Project(name="Test Project")
+        n0 = Node(name="n0", project=p)
+        n1 = Node(name="n1", project=p)
+        n2 = Node(name="n2", project=p)
+        n3 = Node(name="n3")
+        db.session.add_all([p, n0, n1, n2, n3])
+        n1.add_sink(n0)
+        n1.add_source(n2)
+        db.session.commit()
+        self.assertEqual(p.nodes.all(),[n0, n1, n2])
+        p.delete()
+        db.session.commit()
+        self.assertEqual(Node.query.all(), [n3])
+        self.assertEqual(Edge.query.all(), [])
+        self.assertEqual(Project.query.all(), [])
+
+    def test_graph(self):
+        p = Project(name = "Project")
+        a = Node(name="a", project = p)
+        b = Node(name="b", project = p)
+        c = Node(name="c", project = p)
+        db.session.add_all([p, a, b, c])
+        
+        # test nodes
+        graph = p.graph()
+        self.assertEqual(graph.nodes(), [a, b , c])
+
+        # test isolated nodes
+        a.add_source(b)
+        self.assertEqual(graph.isolated_nodes(), [c])
+
+        # test depth_first_search
+        t = graph.depth_first_search(a)
+        self.assertEqual(t, [a])
+        t = graph.depth_first_search(b)
+        self.assertEqual(t, [b,a])
+
+        # test connected components
+        self.assertEqual(graph.connected_components(), [[a,b],[c]])
+
+        # test strongly connected components
+        d = Node(name="d", project = p)
+        e = Node(name="e", project = p)
+        db.session.add_all([e,d])
+        d.add_source(b)
+        b.add_source(e)
+        e.add_source(d)
+        db.session.commit()
+        graph = p.graph()
+        scc = tuple(graph.strongly_connected_components())
+        scc_check = tuple([tuple([a]), tuple([e, d,b]), tuple([c])])
+        self.assertEqual(scc, scc_check)
+
+        # test topological sort
+        b.remove_source(e)
+        db.session.commit()
+        graph = p.graph()
+        order = graph.topological_sort()
+        for node in graph.nodes():
+            for sink in node.sinks():
+                self.assertTrue(order.index(node)<order.index(sink))
 
 
 
