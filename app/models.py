@@ -1,3 +1,6 @@
+"""Definition of classes for tawachai app.
+Also used for table creation."""
+
 from flask import current_app
 from app import db
 from datetime import datetime
@@ -11,50 +14,57 @@ from app.search import add_to_index, remove_from_index, query_index
 from uuid import uuid4
 from app.graphs import Graph
 
-class SearchableMixin(object):
-    @classmethod
-    def search(cls, expression, page, per_page):
-        ids, total = query_index(cls.__tablename__, expression, page, per_page)
-        if total == 0:
-            return cls.query.filter_by(id=0), 0
-        when = []
-        for i in range(len(ids)):
-            when.append((ids[i], i))
-        return cls.query.filter(cls.id.in_(ids)).order_by(
-            db.case(when, value=cls.id)), total
-
-    @classmethod
-    def before_commit(cls, session):
-        session._changes = {
-            'add': list(session.new),
-            'update': list(session.dirty),
-            'delete': list(session.deleted)
-        }
-
-    @classmethod
-    def after_commit(cls, session):
-        for obj in session._changes['add']:
-            if isinstance(obj, SearchableMixin):
-                add_to_index(obj.__tablename__, obj)
-        for obj in session._changes['update']:
-            if isinstance(obj, SearchableMixin):
-                add_to_index(obj.__tablename__, obj)
-        for obj in session._changes['delete']:
-            if isinstance(obj, SearchableMixin):
-                remove_from_index(obj.__tablename__, obj)
-        session._changes = None
-
-    @classmethod
-    def reindex(cls):
-        for obj in cls.query:
-            add_to_index(cls.__tablename__, obj)
-
-db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
-db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+#class SearchableMixin():
+#    """MixinClass to enable Search function.
+#    Currently setup for elastic search."""
+#    @classmethod
+#    def search(cls, expression, page, per_page):
+#        """From Flask Guide."""
+#        ids, total = query_index(cls.__tablename__, expression, page, per_page)
+#        if total == 0:
+#            return cls.query.filter_by(id=0), 0
+#        when = []
+#        for i in range(len(ids)):
+#            when.append((ids[i], i))
+#        return cls.query.filter(cls.id.in_(ids)).order_by(
+#            db.case(when, value=cls.id)), total
+#
+#    @classmethod
+#    def before_commit(cls, session):
+#        """From Flask Guide."""
+#        session._changes = {
+#            'add': list(session.new),
+#            'update': list(session.dirty),
+#            'delete': list(session.deleted)
+#        }
+#
+#    @classmethod
+#    def after_commit(cls, session):
+#        """From Flask Guide."""
+#        for obj in session._changes['add']:
+#            if isinstance(obj, SearchableMixin):
+#                add_to_index(obj.__tablename__, obj)
+#        for obj in session._changes['update']:
+#            if isinstance(obj, SearchableMixin):
+#                add_to_index(obj.__tablename__, obj)
+#        for obj in session._changes['delete']:
+#            if isinstance(obj, SearchableMixin):
+#                remove_from_index(obj.__tablename__, obj)
+#        session._changes = None
+#
+#    @classmethod
+#    def reindex(cls):
+#        """From Flask Guide."""
+#        for obj in cls.query:
+#            add_to_index(cls.__tablename__, obj)
+#
+#db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+#db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
 
 @login.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+def load_user(user_id):
+    """Load current user."""
+    return User.query.get(int(user_id))
 
 
 class User(UserMixin, db.Model):
@@ -75,16 +85,20 @@ class User(UserMixin, db.Model):
         return '<User {}>'.format(self.username)
 
     def set_password(self, password):
+        """Set a user password."""
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        """Check string against user password."""
         return check_password_hash(self.password_hash, password)
 
     def avatar(self, size):
+        """Give user a gravatar avatar."""
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
     def get_reset_password_token(self, expires_in=600):
+        """Password reset token."""
         return jwt.encode(
             {'reset_password': self.id, 'exp': time()+expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
@@ -92,10 +106,11 @@ class User(UserMixin, db.Model):
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            token_id = jwt.decode(token, current_app.config['SECRET_KEY'],
+                                  algorithms=['HS256'])['reset_password']
         except:
             return
-        return User.query.get(id)
+        return User.query.get(token_id)
 
 class Project(db.Model):
     """A Project contains nodes."""
@@ -103,7 +118,7 @@ class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id=db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     nodes = db.relationship('Node', backref='project', lazy='dynamic')
 
     def __repr__(self):
@@ -123,7 +138,7 @@ class Project(db.Model):
             Dict[n] = n.sinks()
 
         graph = Graph(Dict)
-        return graph 
+        return graph
 
     def delete(self):
         for node in self.nodes.all():
@@ -138,7 +153,7 @@ def uid_gen() -> str:
 # Model for Nodes
 # Nodes are part of a project
 # A project is finished when all nodes are completed
-# Nodes have a relationship with each other 
+# Nodes have a relationship with each other
 
 class Edge(db.Model):
     __tablename__ = 'edge'
@@ -150,15 +165,22 @@ class Edge(db.Model):
         return '<Source {}, Sink {}>'.format(self.source_id, self.sink_id)
 
 class Node(db.Model):
-    """Nodes are the basic elements of a project. Each node can only be in one project. They are connected via edges."""
+    """Nodes are the basic elements of a project.
+    Each node can only be in one project.
+    They are connected via edges."""
     __tablename__ = 'node'
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
     name = db.Column(db.String(140))
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    edges_sinks = db.relationship('Edge', backref='source', primaryjoin=id==Edge.source_id, lazy='dynamic', cascade="all, delete-orphan")
-    edges_sources = db.relationship('Edge', backref='sink', primaryjoin=id==Edge.sink_id, lazy='dynamic', cascade="all, delete-orphan")
+    edges_sinks = db.relationship('Edge', backref='source',
+                                  primaryjoin=(id == Edge.source_id),
+                                  lazy='dynamic', cascade="all, delete-orphan")
+
+    edges_sources = db.relationship('Edge', backref='sink',
+                                    primaryjoin=(id == Edge.sink_id),
+                                    lazy='dynamic', cascade="all, delete-orphan")
 
     def __repr__(self):
         return '<Node {}>'.format(self.name)
@@ -187,11 +209,11 @@ class Node(db.Model):
 
     def is_sink_for(self, node):
         """Check if self is a sink for node"""
-        return self.edges_sources.filter(Edge.source_id == node.id).count()>0
+        return self.edges_sources.filter(Edge.source_id == node.id).count() > 0
 
     def is_source_for(self, node):
         """Check if self is a source for node"""
-        return self.edges_sinks.filter(Edge.sink_id == node.id).count()>0
+        return self.edges_sinks.filter(Edge.sink_id == node.id).count() > 0
 
     def is_connected_to(self, node):
         """Check if self is either sink or source or identical to node"""
@@ -224,7 +246,3 @@ class Node(db.Model):
         for source in self.sources():
             self.remove_source(source)
         db.session.delete(self)
-
-        
-        
-
