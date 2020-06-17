@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+	{% include "_project_head.html" %}
+
+	{% if analysis["weak_components"] %}
+	<h2>Project is unconnected</h2>
+	{% for component in analysis["weak_components"] %}
+	<h4>Component {{loop.index}}: </h4>
+	{% for node in component %}
+	{% include "_node.html" %}
+	{% endfor %}
+	</br>
+
+	{% endfor %}
+	{% endif %}
+
+	
+	
+{% endblock %}

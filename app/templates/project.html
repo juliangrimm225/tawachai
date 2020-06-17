@@ -2,17 +2,7 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <table class="table table-hover">
-        <tr>
-            <td width="128px">
-                    <img src="{{ project.avatar(128) }}" />
-            </td>
-            <td>
-				<h1>{{ project.name }}</h1>
-				<a href={{ url_for('main.edit_project', projectid=project.id) }}>Edit Project</a>
-            </td>
-        </tr>
-    </table>
+	{% include "_project_head.html" %}
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(nodeform) }}

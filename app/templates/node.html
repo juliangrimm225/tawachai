@@ -2,23 +2,8 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <table class="table table-hover">
-        <tr>
-            <td width="128px">
-                    <img src="{{ node.avatar(128) }}" />
-            </td>
-            <td>
-				<h1>{{ node.name }}</h1>
-				<a href="{{ url_for('main.edit_node', nodeid=node.id) }}">Edit Node</a></br>
-				Project: <a href="{{ url_for('main.project', projectid=node.project_id) }}">{{ node.project.name }}</a></br>
-				<i>Created by 
-                	<a href="{{ url_for('main.user', username=node.created_by.username) }}">
-                    	{{ node.created_by.first_name }} {{ node.created_by.last_name }}
-                	</a>
-				</i>
-            </td>
-        </tr>
-    </table>
+	{% include "_node_head.html" %}
+
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
