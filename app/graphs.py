@@ -64,6 +64,42 @@ class Graph():
         return components
 
     def strong_components(self):
-        pass
+        UNVISITED = -1
 
+        index = 0
+        ids = {}
+        low = {}
+        onStack = {}
+        stack = []
+        nodes = self.nodes()
+
+        def findSccs():
+            for node in nodes:
+                ids[node] = UNVISITED
+                low[node] = 0
+                onStack[node] = False
+            for node in nodes:
+                if ids[node] == UNVISITED:
+                    dfs(node)
+            return low
         
+        def dfs(node):
+            stack.append(node)
+            onStack[node] = True
+            ids[node] = low[node] = index
+            index = index + 1
+
+            for sink in node.sinks():
+                if ids[sink] == UNVISITED:
+                    dfs(sink)
+                if onStack[sink]:
+                    low[node] = min(low[node], low[sink])
+
+            if ids[node] == low[node]:
+                while stack:
+                    stack_node = stack.pop()
+                    onStack[stack_node] = False
+                    low[stack_node] = ids[node]
+                    if node == stack_node:
+                        break
+        return low
