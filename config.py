@@ -16,10 +16,6 @@ class Config(object):
     MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS') is not None
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-<<<<<<< HEAD
     ADMINS = []
-=======
-#    ADMINS = []
->>>>>>> 4292a3345d0a39fbe692bef5d1be95b0d0821821
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
     PROJECTS_PER_PAGE = 25

@@ -9,7 +9,6 @@ class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
-
 class UserModelCase(unittest.TestCase):
     """Set up the Test cases"""
     def setUp(self):
@@ -188,6 +187,10 @@ class UserModelCase(unittest.TestCase):
         graph = project.graph()
         self.assertTrue(graph)
         self.assertEqual(graph.weak_components(), [[n_1, n_2], [n_3]])
+        
+        self.assertEqual(graph.strong_components(), [])
+
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

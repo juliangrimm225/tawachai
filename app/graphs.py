@@ -1,7 +1,10 @@
 """ Defining the Graph class"""
+
+
 class Graph():
 
-    """ A simple python graph class form https://www.python-course.eu/graphs_python.php """
+    """ A simple python graph class
+    https://www.python-course.eu/graphs_python.php """
 
     def __init__(self, graph_dict=None):
         """ initializes a graph object """
@@ -36,6 +39,7 @@ class Graph():
         The direction can be 'forward', 'backward' or 'undirected'."""
 
         visited = []
+
         def dfs(node):
             if node in visited:
                 return
@@ -52,18 +56,55 @@ class Graph():
         return visited
 
     def weak_components(self):
-        """Returns a list of the components of weak components of an directed graph."""
+        """Returns a list of the components of weak
+        components of an directed graph."""
         visited = []
         components = []
         nodes = self.nodes()
         for node in nodes:
             while node not in visited:
-                dfs = self.depth_first_search(starting_node=node, direction='undirected')
+                dfs = self.depth_first_search(starting_node=node,
+                                              direction='undirected')
                 visited = visited + dfs
                 components.append(dfs)
         return components
 
     def strong_components(self):
-        pass
+        UNVISITED = -1
 
-        
+        index = 0
+        ids = {}
+        low = {}
+        onStack = {}
+        stack = []
+        nodes = self.nodes()
+
+        def findSccs():
+            for node in nodes:
+                ids[node] = UNVISITED
+                low[node] = 0
+                onStack[node] = False
+            for node in nodes:
+                if ids[node] == UNVISITED:
+                    dfs(node)
+            return low
+
+        def dfs(node):
+            stack.append(node)
+            onStack[node] = True
+            ids[node] = low[node] = index
+
+            for sink in node.sinks():
+                if ids[sink] == UNVISITED:
+                    dfs(sink)
+                if onStack[sink]:
+                    low[node] = min(low[node], low[sink])
+
+            if ids[node] == low[node]:
+                while stack:
+                    stack_node = stack.pop()
+                    onStack[stack_node] = False
+                    low[stack_node] = ids[node]
+                    if node == stack_node:
+                        break
+        return low
