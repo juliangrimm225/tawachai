@@ -4,10 +4,12 @@ from app import create_app, db
 from app.models import User, Project, Node, Edge
 from config import Config
 
+
 class TestConfig(Config):
     """Set up the testing configuration"""
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
+
 
 class UserModelCase(unittest.TestCase):
     """Set up the Test cases"""
@@ -31,8 +33,8 @@ class UserModelCase(unittest.TestCase):
     def test_user_avatar(self):
         user = User(username='john', email='john@example.com')
         self.assertEqual(user.avatar(128), ('https://www.gravatar.com/avatar/'
-                                         'd4c74594d841139328695756648b6bd6'
-                                         '?d=identicon&s=128'))
+                                            'd4c74594d841139328695756648b6bd6'
+                                            '?d=identicon&s=128'))
 
     def test_checks_for_sinks_and_sources(self):
         n0 = Node(name="n0 (root)")
@@ -187,9 +189,7 @@ class UserModelCase(unittest.TestCase):
         graph = project.graph()
         self.assertTrue(graph)
         self.assertEqual(graph.weak_components(), [[n_1, n_2], [n_3]])
-        
         self.assertEqual(graph.strong_components(), [])
-
 
 
 if __name__ == '__main__':

@@ -10,56 +10,59 @@ from app import login
 from hashlib import md5
 from time import time
 import jwt
-from app.search import add_to_index, remove_from_index, query_index
+# from app.search import add_to_index, remove_from_index, query_index
 from uuid import uuid4
 from app.graphs import Graph
 
-#class SearchableMixin():
-#    """MixinClass to enable Search function.
-#    Currently setup for elastic search."""
-#    @classmethod
-#    def search(cls, expression, page, per_page):
-#        """From Flask Guide."""
-#        ids, total = query_index(cls.__tablename__, expression, page, per_page)
-#        if total == 0:
-#            return cls.query.filter_by(id=0), 0
-#        when = []
-#        for i in range(len(ids)):
-#            when.append((ids[i], i))
-#        return cls.query.filter(cls.id.in_(ids)).order_by(
-#            db.case(when, value=cls.id)), total
+
+# class SearchableMixin():
+#     """MixinClass to enable Search function.
+#     Currently setup for elastic search."""
+#     @classmethod
+#     def search(cls, expression, page, per_page):
+#         """From Flask Guide."""
+#         ids, total = query_index(cls.__tablename__,
+#                                  expression, page, per_page)
+#         if total == 0:
+#             return cls.query.filter_by(id=0), 0
+#         when = []
+#         for i in range(len(ids)):
+#             when.append((ids[i], i))
+#         return cls.query.filter(cls.id.in_(ids)).order_by(
+#             db.case(when, value=cls.id)), total
 #
-#    @classmethod
-#    def before_commit(cls, session):
-#        """From Flask Guide."""
-#        session._changes = {
-#            'add': list(session.new),
-#            'update': list(session.dirty),
-#            'delete': list(session.deleted)
-#        }
+#     @classmethod
+#     def before_commit(cls, session):
+#         """From Flask Guide."""
+#         session._changes = {
+#             'add': list(session.new),
+#             'update': list(session.dirty),
+#             'delete': list(session.deleted)
+#         }
 #
-#    @classmethod
-#    def after_commit(cls, session):
-#        """From Flask Guide."""
-#        for obj in session._changes['add']:
-#            if isinstance(obj, SearchableMixin):
-#                add_to_index(obj.__tablename__, obj)
-#        for obj in session._changes['update']:
-#            if isinstance(obj, SearchableMixin):
-#                add_to_index(obj.__tablename__, obj)
-#        for obj in session._changes['delete']:
-#            if isinstance(obj, SearchableMixin):
-#                remove_from_index(obj.__tablename__, obj)
-#        session._changes = None
+#     @classmethod
+#     def after_commit(cls, session):
+#         """From Flask Guide."""
+#         for obj in session._changes['add']:
+#             if isinstance(obj, SearchableMixin):
+#                 add_to_index(obj.__tablename__, obj)
+#         for obj in session._changes['update']:
+#             if isinstance(obj, SearchableMixin):
+#                 add_to_index(obj.__tablename__, obj)
+#         for obj in session._changes['delete']:
+#             if isinstance(obj, SearchableMixin):
+#                 remove_from_index(obj.__tablename__, obj)
+#         session._changes = None
 #
-#    @classmethod
-#    def reindex(cls):
-#        """From Flask Guide."""
-#        for obj in cls.query:
-#            add_to_index(cls.__tablename__, obj)
+#     @classmethod
+#     def reindex(cls):
+#         """From Flask Guide."""
+#         for obj in cls.query:
+#             add_to_index(cls.__tablename__, obj)
 #
-#db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
-#db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+# db.event.listen(db.session, 'before_commit', SearchableMixin.before_commit)
+# db.event.listen(db.session, 'after_commit', SearchableMixin.after_commit)
+
 
 @login.user_loader
 def load_user(user_id):
@@ -76,7 +79,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     projects = db.relationship('Project', backref='created_by', lazy='dynamic')
-    nodes_creation = db.relationship('Node', backref='created_by', lazy='dynamic')
+    nodes_creation = db.relationship('Node',
+                                     backref='created_by', lazy='dynamic')
 
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
@@ -95,22 +99,26 @@ class User(UserMixin, db.Model):
     def avatar(self, size):
         """Give user a gravatar avatar."""
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+        return ('https://www.gravatar.com/avatar/{}?d=identicon&s={}'
+                .format(digest, size)
+                )
 
     def get_reset_password_token(self, expires_in=600):
         """Password reset token."""
         return jwt.encode(
             {'reset_password': self.id, 'exp': time()+expires_in},
-            current_app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256').decode('utf-8')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
             token_id = jwt.decode(token, current_app.config['SECRET_KEY'],
                                   algorithms=['HS256'])['reset_password']
-        except:
+        except Exception:
             return
         return User.query.get(token_id)
+
 
 class Project(db.Model):
     """A Project contains nodes."""
@@ -125,11 +133,16 @@ class Project(db.Model):
         return '<Project {}>'.format(self.name)
 
     def avatar(self, size):
-        digest = md5(str(self.name.lower()+str(self.timestamp).lower()).encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+        digest = (md5(str(self.name.lower()+str(self.timestamp)
+                  .lower()).encode('utf-8')).hexdigest()
+                  )
+        return ('https://www.gravatar.com/avatar/{}?d=identicon&s={}'
+                .format(digest, size)
+                )
 
     def graph(self):
-        """Returns a dictionary of the whole project that can be used as graph."""
+        """Returns a dictionary of the whole project
+        that can be used as graph."""
 
         nodes = self.nodes.all()
 
@@ -144,6 +157,7 @@ class Project(db.Model):
         for node in self.nodes.all():
             node.delete()
         db.session.delete(self)
+
 
 def uid_gen() -> str:
     uid = str(uuid4())
@@ -164,6 +178,7 @@ class Edge(db.Model):
     def __repr__(self):
         return '<Source {}, Sink {}>'.format(self.source_id, self.sink_id)
 
+
 class Node(db.Model):
     """Nodes are the basic elements of a project.
     Each node can only be in one project.
@@ -180,14 +195,19 @@ class Node(db.Model):
 
     edges_sources = db.relationship('Edge', backref='sink',
                                     primaryjoin=(id == Edge.sink_id),
-                                    lazy='dynamic', cascade="all, delete-orphan")
+                                    lazy='dynamic',
+                                    cascade="all, delete-orphan")
 
     def __repr__(self):
         return '<Node {}>'.format(self.name)
 
     def avatar(self, size):
-        digest = md5(str(self.name.lower()).lower().encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+        digest = (md5(str(self.name.lower()).lower().encode('utf-8'))
+                  .hexdigest()
+                  )
+        return ('https://www.gravatar.com/avatar/{}?d=identicon&s={}'
+                .format(digest, size)
+                )
 
     def sources(self):
         """Create  list of nodes that are sources"""
@@ -217,7 +237,10 @@ class Node(db.Model):
 
     def is_connected_to(self, node):
         """Check if self is either sink or source or identical to node"""
-        return self.is_sink_for(node) or self.is_source_for(node) or self == node
+        return (self.is_sink_for(node)
+                or self.is_source_for(node)
+                or self == node
+                )
 
     def add_sink(self, node):
         """add a node as a sink"""
@@ -240,6 +263,7 @@ class Node(db.Model):
     def remove_source(self, node):
         """remove a node as a source"""
         node.remove_sink(self)
+
     def delete(self):
         for sink in self.sinks():
             self.remove_sink(sink)
