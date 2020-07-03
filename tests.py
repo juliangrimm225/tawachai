@@ -2,6 +2,7 @@
 import unittest
 from app import create_app, db
 from app.models import User, Project, Node, Edge
+from app.graphs import Graph
 from config import Config
 
 
@@ -176,20 +177,44 @@ class UserModelCase(unittest.TestCase):
         self.assertEqual(Project.query.all(), [])
 
     def test_graph(self):
-        project = Project(name="project")
-        n_1 = Node(name="n_1", project=project)
-        n_2 = Node(name="n_2", project=project)
-        n_3 = Node(name="n_3", project=project)
-        db.session.add_all([project, n_1, n_2, n_3])
-        db.session.commit()
+        def set_of_set(list):
+            sets = set()
+            for sublist in list:
+                subset = frozenset(sublist)
+                sets.add(subset)
+            return sets
 
-        n_1.add_source(n_2)
-        db.session.commit()
+        g = {
+            "a": ["b"],
+            "b": ["c", "d"],
+            "c": ["d", "e"],
+            "d": ["e"],
+            "e": [],
+            "f": []
+            }
+        graph = Graph(g)
+        nodes_check = set(["a", "b", "c", "d", "e", "f"])
+        self.assertEqual(set(graph.nodes()), nodes_check)
+        edges_check = [
+                        ["a", "b"],
+                        ["b", "c"],
+                        ["b", "d"],
+                        ["c", "d"],
+                        ["c", "e"],
+                        ["d", "e"]
+                    ]
+        edges_check = set_of_set(edges_check)
+        edges = set_of_set(graph.edges())
+        self.assertEqual(edges, edges_check)
+        self.assertEqual(len(edges), 6)
+        self.assertTrue(["f"] in graph.connected_components())
+        self.assertEqual(len(graph.connected_components()), 2)
+        self.assertTrue(graph.topsort())
 
-        graph = project.graph()
-        self.assertTrue(graph)
-        self.assertEqual(graph.weak_components(), [[n_1, n_2], [n_3]])
-        self.assertEqual(graph.strong_components(), [])
+        g["e"].append("d")
+        graph = Graph(g)
+        self.assertFalse(graph.topsort())
+
 
 
 if __name__ == '__main__':
